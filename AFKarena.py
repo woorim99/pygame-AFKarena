@@ -16,7 +16,9 @@ character2 = pygame.image.load('character2.png')
 character3 = pygame.image.load('character3.png')
 character4 = pygame.image.load('character4.png')
 character5 = pygame.image.load('character5.png')
-play_button = pygame.image.load('playbutton.png')
+play_button = pygame.image.load('play.png')
+exit_button = pygame.image.load('exit.png')
+option_button = pygame.image.load('option.png')
 monster1 = pygame.image.load('monster1.png')
 monster2 = pygame.image.load('monster2.png')
 star = pygame.image.load('star.png')
@@ -26,6 +28,7 @@ pygame.mixer.music.play(-1)                  #배경음악 끝나면 다시재�
 clock = pygame.time.Clock()
 start_screen = True
 game_screen = False
+option_screen = False
 
 class button():
     def __init__(self, x, y, width, height):
@@ -39,7 +42,9 @@ class button():
             if pos[1] > self.y and pos[1] < self.y + self.height:
                 return True
             
-playButton = button(310,380,200,69)
+playButton = button(377, 462, 273, 69)#(377,460,269,69)
+exitButton = button(90, 460, 273, 69)
+optionButton = button(670, 460, 273, 69)
 
 class dealer():       #dealer class
     def __init__(self, x, y, width, height):
@@ -76,10 +81,12 @@ monster_1 = com_monster(730, 320, 100, 129)
 monster_2 = com_monster(600, 350, 100, 116)
 
 def main_view():
-    global start_screen, game_screen
+    global start_screen, game_screen, option_screen
     if start_screen is True:
         screen.blit(background, (0, 0))
         screen.blit(play_button, (playButton.x, playButton.y))
+        screen.blit(option_button, (optionButton.x, playButton.y))
+        screen.blit(exit_button, (exitButton.x, exitButton.y))
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()
             if event.type == QUIT:
@@ -90,6 +97,18 @@ def main_view():
                 if playButton.isOver(pos):
                     start_screen = False
                     game_screen = True
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if optionButton.isOver(pos):
+                    start_screen = False
+                    game_screen = False
+                    option_screen = True
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if exitButton.isOver(pos):
+                    pygame.quit()
+                    sys.exit()
+                    
 
     if game_screen is True:
         screen.blit(dungeon, (0, 0))
@@ -116,6 +135,19 @@ def main_view():
                 if e.key == ord('r'):
                     magician1.skill = True
                     magician1.draw(star)
+
+    if option_screen is True:
+        screen.blit(monster1, (0, 0))
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                option_screen = False
+                start_screen = True
+
+    
 
 def main():
     while True:
