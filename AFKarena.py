@@ -26,6 +26,8 @@ star = pygame.image.load('star.png')
 white = pygame.image.load('white.png')
 black = pygame.image.load('black.png')
 
+star_list = [pygame.image.load('abc/star1.png'), pygame.image.load('abc/star2.png'), pygame.image.load('abc/star3.png'), pygame.image.load('abc/star4.png')]
+
 pygame.mixer.music.load('bgmusic.mp3')               #배경음악
 pygame.mixer.music.play(-1)                          #배경음악 끝나면 다시재생
 clock = pygame.time.Clock()
@@ -53,11 +55,11 @@ healer_auto = 1
 tanker_auto = 1
 magician_auto = 1
 
-'''m1_list = []                                         #몬스터가 자동공격 할 때 필요
+m1_list = []                                         #몬스터가 자동공격 할 때 필요
 m2_list = []
 
 m1_auto = 1                                          #몬스터가 자동공격 할 때 필요
-m2_auto = 1'''
+m2_auto = 1
 
 class button():                                      #버튼 클래스
     def __init__(self, x, y, width, height):
@@ -107,11 +109,14 @@ class com_monster():      #monster class
         self.health = health
         self.amount_of_attack = amount_of_attack
 
+    '''def __del__(self):
+        print('몬스터 처치')'''
+
 dealer1 = dealer(60, 350, 70, 78, 100, 20)             #딜러
 healer1 = healer(150, 380, 70, 78, 100, 5)             #힐러
 tanker1 = tanker(230, 350, 70, 78, 200, 10)            #탱커
 magician1 = magician(370, 380, 70, 78, 100, 15)        #마법사
-character_list = [dealer1, healer1, tanker1, magician1]
+character_list = [dealer1, healer1, tanker1, magician1]#몬스터가 자동공격할때 필요
 
 monster_1 = com_monster(730, 320, 100, 129, 200, 15)   #몬스터1
 monster_2 = com_monster(600, 350, 100, 116, 200, 15)   #몬스터2
@@ -122,7 +127,7 @@ def game():
     global dealer_skill, healer_skill, tanker_skill, magician_skill  #쿨타임 만들 때 필요한 리스트
     global dealer_auto, healer_auto, tanker_auto, magician_auto      #캐릭터가 자동공격 만들때 필요
     global dauto_list, hauto_list, tauto_list, mauto_list            #캐릭터가 자동공격 만들때 필요
-    '''global m1_auto, m2_auto, m1_list, m2_list, character_list        #몬스터가 자동공격 할 때 필요'''
+    global m1_auto, m2_auto, m1_list, m2_list, character_list        #몬스터가 자동공격 할 때 필요
     
     if start_screen is True:                         #시작화면일때
         screen.blit(background, (0, 0))              #배경
@@ -131,30 +136,30 @@ def game():
         screen.blit(exit_button, (exitButton.x, exitButton.y))       #나가는버튼
         
         for event in pygame.event.get():                   
-            pos = pygame.mouse.get_pos()
+            pos = pygame.mouse.get_pos()                     #X버튼 누르면 나가짐
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:        #시작버튼 누르면 게임화면
                 if playButton.isOver(pos):
                     start_screen = False
                     game_screen = True
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:       #옵션버튼 누르면 옵션화면
                 if optionButton.isOver(pos):
                     start_screen = False
                     game_screen = False
                     option_screen = True
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:       #exit버튼 누르면 나가기
                 if exitButton.isOver(pos):
                     pygame.quit()
                     sys.exit()          
 
-    if game_screen is True:
-        screen.blit(dungeon, (0, 0))
-        screen.blit(character4, (dealer1.x, dealer1.y))
+    if game_screen is True:                                    #게임화면일때
+        screen.blit(dungeon, (0, 0))                           #배경
+        screen.blit(character4, (dealer1.x, dealer1.y))        #캐릭터/몬스터
         screen.blit(character2, (healer1.x, healer1.y))
         screen.blit(character5, (tanker1.x, tanker1.y))
         screen.blit(character3, (magician1.x, magician1.y))
@@ -163,41 +168,41 @@ def game():
         
         clock.tick(10)                #쿨타임에필요
 
-        '''m1_auto -= 1
+        m1_auto -= 1                 #몬스터 자동공격 할 떄필요
         m2_auto -= 1
 
-        if m1_auto == 0:
+        if m1_auto == 0:                 #몬스터 자동공격할 떄 필요
             m1_list.append('O')
 
         if m2_auto == 0:
             m2_list.append('O')
 
-        if len(m1_list) == 1:
+        if len(m1_list) == 1 and monster_1.health > 0:               #몬스터1(피가 0보다클 때)가 캐릭터를 자동공격
             for i in character_list:
                 if i.health <= 0:
                     character_list.remove(i)
             a = random.choice(character_list)
             a.health -= 3
-            character_list.remove(a)
+            m1_list.pop()
             m1_auto = 10
             print(dealer1.health, healer1.health, tanker1.health, magician1.health)
-
-        if len(m2_list) == 1:
+        
+        if len(m2_list) == 1 and monster_2.health > 0:             #몬스터2(피가 0보다클 때)가 캐릭터를 자동공격
             for i in character_list:
                 if i.health <= 0:
                     character_list.remove(i)
             a = random.choice(character_list)
             a.health -= 3
-            character_list.remove(a)
+            m2_list.pop()
             m2_auto = 10
-            print(dealer1.health, healer1.health, tanker1.health, magician1.health)'''
+            print(dealer1.health, healer1.health, tanker1.health, magician1.health)
         
-        dealer_auto -= 1          #딜러의 자동공격에필요
-        healer_auto -= 2
-        tanker_auto -= 3
-        magician_auto -= 4
+        dealer_auto -= 1          #캐릭터의 자동공격에필요
+        healer_auto -= 1
+        tanker_auto -= 1
+        magician_auto -= 1
 
-        if dealer_auto == 0:
+        if dealer_auto == 0:             #캐릭터의 자동공격에 필요
             dauto_list.append('O')
 
         if healer_auto == 0:
@@ -209,92 +214,96 @@ def game():
         if magician_auto == 0:
             mauto_list.append('O')
 
-        if len(dauto_list) == 1:
-            if monster_1.health <= 0 and monster_2.health > 0:
-                monster_2.health -= 1
-                dauto_list.pop()
-                dealer_auto = 10
-                print(monster_1.health, monster_2.health)
+        if len(dauto_list) == 1:                  #딜러(피가 0보다클때)가 몬스터를 자동공격
+            if dealer1.health > 0:
+                if monster_1.health <= 0 and monster_2.health > 0:
+                    monster_2.health -= 1
+                    dauto_list.pop()
+                    dealer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            elif monster_1.health > 0 and monster_2.health <= 0:
-                monster_1.health -= 1
-                dauto_list.pop()
-                dealer_auto = 10
-                print(monster_1.health, monster_2.health)
+                elif monster_1.health > 0 and monster_2.health <= 0:
+                    monster_1.health -= 1
+                    dauto_list.pop()
+                    dealer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            else:
-                a = random.choice([monster_1, monster_2])
-                a.health -= 1
-                dauto_list.pop()
-                dealer_auto = 10
-                print(monster_1.health, monster_2.health)
+                else:
+                    a = random.choice([monster_1, monster_2])
+                    a.health -= 1
+                    dauto_list.pop()
+                    dealer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-        if len(hauto_list) == 1:
-            if monster_1.health <= 0 and monster_2.health > 0:
-                monster_2.health -= 1
-                hauto_list.pop()
-                healer_auto = 10
-                print(monster_1.health, monster_2.health)
+        if len(hauto_list) == 1:                #힐러(피가 0보다클때)가 몬스터를 자동공격  
+            if healer1.health > 0:
+                if monster_1.health <= 0 and monster_2.health > 0:
+                    monster_2.health -= 1
+                    hauto_list.pop()
+                    healer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            elif monster_1.health > 0 and monster_2.health <= 0:
-                monster_1.health -= 1
-                hauto_list.pop()
-                healer_auto = 10
-                print(monster_1.health, monster_2.health)
+                elif monster_1.health > 0 and monster_2.health <= 0:
+                    monster_1.health -= 1
+                    hauto_list.pop()
+                    healer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            else:
-                a = random.choice([monster_1, monster_2])
-                a.health -= 1
-                hauto_list.pop()
-                healer_auto = 10
-                print(monster_1.health, monster_2.health)
+                else:
+                    a = random.choice([monster_1, monster_2])
+                    a.health -= 1
+                    hauto_list.pop()
+                    healer_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-        if len(tauto_list) == 1:
-            if monster_1.health <= 0 and monster_2.health > 0:
-                monster_2.health -= 1
-                tauto_list.pop()
-                tanker_auto = 10
-                print(monster_1.health, monster_2.health)
+        if len(tauto_list) == 1:                  #탱커(피가 0보다클때)가 몬스터를 자동공격
+            if tanker1.health > 0:
+                if monster_1.health <= 0 and monster_2.health > 0:
+                    monster_2.health -= 1
+                    tauto_list.pop()
+                    tanker_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            elif monster_1.health > 0 and monster_2.health <= 0:
-                monster_1.health -= 1
-                tauto_list.pop()
-                tanker_auto = 10
-                print(monster_1.health, monster_2.health)
+                elif monster_1.health > 0 and monster_2.health <= 0:
+                    monster_1.health -= 1
+                    tauto_list.pop()
+                    tanker_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            else:
-                a = random.choice([monster_1, monster_2])
-                a.health -= 1
-                tauto_list.pop()
-                tanker_auto = 10
-                print(monster_1.health, monster_2.health)
+                else:
+                    a = random.choice([monster_1, monster_2])
+                    a.health -= 1
+                    tauto_list.pop()
+                    tanker_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-        if len(mauto_list) == 1:
-            if monster_1.health <= 0 and monster_2.health > 0:
-                monster_2.health -= 1
-                mauto_list.pop()
-                magician_auto = 10
-                print(monster_1.health, monster_2.health)
+        if len(mauto_list) == 1:                   #마법사(피가 0보다클때)가 몬스터를 자동공격
+            if magician1.health > 0:
+                if monster_1.health <= 0 and monster_2.health > 0:
+                    monster_2.health -= 1
+                    mauto_list.pop()
+                    magician_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            elif monster_1.health > 0 and monster_2.health <= 0:
-                monster_1.health -= 1
-                mauto_list.pop()
-                magician_auto = 10
-                print(monster_1.health, monster_2.health)
+                elif monster_1.health > 0 and monster_2.health <= 0:
+                    monster_1.health -= 1
+                    mauto_list.pop()
+                    magician_auto = 10
+                    print(monster_1.health, monster_2.health)
 
-            else:
-                a = random.choice([monster_1, monster_2])
-                a.health -= 1
-                mauto_list.pop()
-                magician_auto = 10
-                print(monster_1.health, monster_2.health)
+                else:
+                    a = random.choice([monster_1, monster_2])
+                    a.health -= 1
+                    mauto_list.pop()
+                    magician_auto = 10
+                    print(monster_1.health, monster_2.health)
         
-        dealer_ctime -= 1
+        dealer_ctime -= 1                     #캐릭터 스킬('q', 'w', 'e', 'r') 쿨타임에필요
         healer_ctime -= 1
         tanker_ctime -= 1
         magician_ctime -= 1
         
-        if dealer_ctime == 0:
+        if dealer_ctime == 0:                   #쿨타임이 0일 때 스킬 쿨타임종료
             dealer_skill.append('O')
             print('딜러스킬 쿨타임 종료')
         if healer_ctime == 0:
@@ -315,14 +324,13 @@ def game():
             pygame.quit()            #You lose! 화면 나오게 고치기(retry/exit)
             sys.exit
 
-
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
+        for e in pygame.event.get():                
+            if e.type == pygame.QUIT:                
                 pygame.quit()
                 sys.exit()
             
             if e.type == pygame.KEYUP:
-                if e.key == ord('q') and len(dealer_skill) == 1:                  #딜러가 스킬쓸 때 몬스터 체력 닳게
+                if e.key == ord('q') and len(dealer_skill) == 1 and dealer1.health > 0: #딜러가 스킬쓸 때 몬스터 체력 닳게
                     dealer1.draw(star)
                     if monster_1.health <= 0 and monster_2.health >= 0:
                         monster_2.health -= dealer1.amount_of_attack
@@ -336,7 +344,7 @@ def game():
                     dealer_ctime = 100
                     print('스킬 쿨타임 시작')
                 
-                if e.key == ord('w') and len(healer_skill) == 1:                
+                if e.key == ord('w') and len(healer_skill) == 1 and healer1.health > 0:                
                     healer1.draw(star)                                  #힐러가 스킬 쓸 때 몬스터 체력 닳게
                     healer1.draw(star)
                     if monster_1.health <= 0 and monster_2.health >= 0:
@@ -351,7 +359,7 @@ def game():
                     healer_ctime = 100
                     print('스킬 쿨타임 시작')
                 
-                if e.key == ord('e') and len(tanker_skill) == 1:
+                if e.key == ord('e') and len(tanker_skill) == 1 and tanker1.health > 0:
                     tanker1.draw(star)                                     #탱커가 스킬 쓸 때 몬스터 체력 닳게
                     if monster_1.health <= 0 and monster_2.health >= 0:
                         monster_2.health -= tanker1.amount_of_attack
@@ -365,7 +373,7 @@ def game():
                     tanker_ctime = 100
                     print('스킬 쿨타임 시작')
                 
-                if e.key == ord('r') and len(magician_skill) == 1:
+                if e.key == ord('r') and len(magician_skill) == 1 and magician1.health > 0:
                     magician1.draw(star)                                #마법사가 스킬 쓸 때 몬스터 체력 닳게
                     if monster_1.health <= 0 and monster_2.health >= 0:
                         monster_2.health -= magician1.amount_of_attack
@@ -379,7 +387,7 @@ def game():
                     magician_ctime = 100
                     print('스킬 쿨타임 시작')
 
-    if option_screen is True:
+    if option_screen is True:                 #옵션스크린일때
         screen.blit(white, (0, 0))
         screen.blit(black, (op_exit.x, op_exit.y))
         screen.blit(black, (op_button.x, op_button.y))
@@ -393,8 +401,7 @@ def game():
                 if op_exit.isOver(pos):
                     start_screen = True
                     game_screen = False
-                    option_screen = False
-                
+                    option_screen = False        
 
 def main():
     while True:
