@@ -5,6 +5,8 @@ from pygame.locals import QUIT
 play_button = pygame.image.load('play.png')
 exit_button = pygame.image.load('exit.png')
 option_button = pygame.image.load('option.png')
+back = pygame.image.load('back.png')                              #빨간색 back버튼
+play = pygame.image.load('red_play.png')                          #빨간색 play 버튼
 
 class button():
 
@@ -19,20 +21,24 @@ class button():
             if pos[1] > self.y and pos[1] < self.y + self.height:
                 return True
 
-
 # start screen
 start_screen = True
 game_screen = False
 option_screen =False
+stage_screen = False
+win_screen = False
+lose_screen = False
 
-#character button in charBar
-d_button = False
-t_button = False
-h_button = False
-m_button = False
 
-playButton = button(377,462,273,69)
+playButton = button(377,460,273,69)
 exitButton = button(90,460,273,69)
 optionButton = button(670,460,273,69) 
-op_exit = button(670, 400, 207, 109)
-op_button = button(90, 400, 207, 109)               
+op_back = button(750, 470, 100, 75)
+stage_back = button(522, 460, 100, 75)
+stage_play = button(402, 460, 100, 75)
+restart_button = button(90, 400, 287, 74)
+reexitButton = button(670, 400, 273, 69)
+dealer_levelup = button(90, 90, 200, 100)
+healer_levelup = button(90, 210, 200, 100)
+tanker_levelup = button(90, 330, 200, 100)
+magician_levelup = button(90, 450, 200, 100)
