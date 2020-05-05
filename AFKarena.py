@@ -6,7 +6,6 @@ from button import *
 from player import *
 from bar import *
 from monster import *
-from image_load import *
 
 pygame.init()
 display_width = 1024
