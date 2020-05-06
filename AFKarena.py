@@ -7,7 +7,7 @@ from player import *
 from monster import *
 
 pygame.init()
-pygame.mixer.init()
+pygame.mixer.init()    #사운드
 display_width = 1024
 display_height = 600
 screen = pygame.display.set_mode((display_width, display_height))
